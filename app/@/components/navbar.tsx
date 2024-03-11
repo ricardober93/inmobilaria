@@ -1,6 +1,6 @@
 import { Link } from "@remix-run/react";
 
-import { buttonVariants } from "./button";
+import { buttonVariants } from "./ui/button";
 
 export const Navbar = () => {
   return (

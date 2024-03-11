@@ -1,8 +1,9 @@
 import type { MetaFunction } from "@remix-run/node";
 
+
+import { Navbar } from "~/@/components/navbar";
+import { Recomendation } from "~/@/components/recomendation";
 import { Hero } from "~/@/components/ui/hero";
-import { Navbar } from "~/@/components/ui/navbar";
-import { Recomendation } from "~/@/components/ui/recomendation";
 
 export const meta: MetaFunction = () => [
   {

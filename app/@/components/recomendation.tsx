@@ -1,4 +1,4 @@
-import { Button } from "./button";
+import { Button } from "./ui/button";
 import {
   Card,
   CardHeader,
@@ -6,7 +6,7 @@ import {
   CardDescription,
   CardContent,
   CardFooter,
-} from "./card";
+} from "./ui/card";
 
 export const Recomendation = () => {
   return (
