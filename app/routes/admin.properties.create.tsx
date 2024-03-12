@@ -1,7 +1,6 @@
 import type { ActionFunctionArgs } from "@remix-run/node";
 import {
   json,
-  redirect,
   unstable_composeUploadHandlers,
   unstable_createMemoryUploadHandler,
   unstable_parseMultipartFormData,
@@ -152,7 +151,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     );
   }
 
-  if (typeof price !== "string") {
+  if (typeof price !== "string" || price.length === 0) {
     return json(
       {
         errors: {
@@ -171,7 +170,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     );
   }
 
-  if (typeof area !== "string") {
+  if (typeof area !== "string" || area.length === 0) {
     return json(
       {
         errors: {
@@ -209,8 +208,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     }),
   });
 
-    return json({
-      ok: true,
-      menssage: "Property created successfully",
-    });
+  return json({
+    ok: true,
+    menssage: "Property created successfully",
+  });
 };

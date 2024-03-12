@@ -1,8 +1,6 @@
 // import type { LoaderFunctionArgs } from "@remix-run/node";
-import { Property } from ".prisma/client";
-import { GetResult } from "@prisma/client/runtime";
 import { Link, json, useLoaderData } from "@remix-run/react";
-import { LoaderFunctionArgs } from "react-router";
+
 import {
   Table,
   TableBody,
@@ -18,7 +16,7 @@ import { getAllProperty } from "~/models/property.server";
 // import { getNoteListItems } from "~/models/note.server";
 // import { requireUserId } from "~/session.server";
 
-export const loader = async ({ request }: LoaderFunctionArgs) => {
+export const loader = async () => {
   const list = await getAllProperty();
   return json({ list });
 };
@@ -53,8 +51,8 @@ export default function PropertyPage() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {data?.list.map((item: Property) => (
-            <TableRow key={item.id + item.name}>
+          {data?.list.map((item) => (
+            <TableRow key={item.id + item.name!}>
               <TableCell className="font-medium">{item.name}</TableCell>
               <TableCell className="">
                 <img
@@ -62,7 +60,7 @@ export default function PropertyPage() {
                   src={
                     item.images[0]?.url ?? "https://placehold.jp/150x150.png"
                   }
-                  alt={item.name}
+                  alt={item.name!}
                 />
               </TableCell>
               <TableCell>{item.description}</TableCell>
