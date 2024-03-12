@@ -1,6 +1,7 @@
-// import type { LoaderFunctionArgs } from "@remix-run/node";
-import { Link, json, useLoaderData } from "@remix-run/react";
+import { LoaderFunctionArgs } from "@remix-run/node";
+import { Link, json, useLoaderData, useNavigate } from "@remix-run/react";
 
+import { Button } from "~/@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -16,13 +17,31 @@ import { getAllProperty } from "~/models/property.server";
 // import { getNoteListItems } from "~/models/note.server";
 // import { requireUserId } from "~/session.server";
 
-export const loader = async () => {
-  const list = await getAllProperty();
-  return json({ list });
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  const url = new URL(request.url);
+  const skip = Number(url.searchParams.get("skip")) || 0;
+  const take = Number(url.searchParams.get("take")) || 10;
+
+  const data = await getAllProperty({
+    skip,
+    take,
+  });
+  return json({ data, skip, take });
 };
 
 export default function PropertyPage() {
-  const data = useLoaderData<typeof loader>();
+  const navigate = useNavigate();
+  const { data, skip, take } = useLoaderData<typeof loader>();
+
+  const previousPage = () => {
+    if (skip === 0) return;
+    navigate(`/admin/properties?skip=${skip - take}&take=${take}`);
+  };
+
+  const nextPage = () => {
+    if (skip + take >= data.count) return;
+    navigate(`/admin/properties?skip=${skip + take}&take=${take}`);
+  };
 
   return (
     <div className="w-full flex h-full flex-col">
@@ -34,7 +53,7 @@ export default function PropertyPage() {
       </p>
 
       <Table>
-        <TableCaption>Lista de Propiedades.</TableCaption>
+        <TableCaption>Lista de Propiedades. Total : {data.count}</TableCaption>
         <TableHeader>
           <TableRow>
             <TableHead className="w-[100px]">Nombre</TableHead>
@@ -51,7 +70,7 @@ export default function PropertyPage() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {data?.list.map((item) => (
+          {data?.products?.map((item) => (
             <TableRow key={item.id + item.name!}>
               <TableCell className="font-medium">{item.name}</TableCell>
               <TableCell className="">
@@ -76,6 +95,20 @@ export default function PropertyPage() {
           ))}
         </TableBody>
       </Table>
+
+      {/* pagination */}
+      <div className="flex justify-center items-center gap-3">
+        <Button onClick={previousPage} className="btn btn-primary">
+          Previous
+        </Button>
+        <Button
+          onClick={nextPage}
+          //to={`/admin/properties?skip=${data.skip + 10}&take=${data.take + 10}`}
+          className="btn btn-primary"
+        >
+          Next
+        </Button>
+      </div>
     </div>
   );
 }

@@ -1,9 +1,16 @@
 import type { Property, Image } from "@prisma/client";
 
+
 import { prisma } from "~/db.server";
 
-export async function getAllProperty() {
-  return await prisma.property.findMany({
+export async function getAllProperty({
+  skip = 0,
+  take = 10,
+}: {
+  skip: number;
+  take: number;
+}) {
+  const products = await prisma.property.findMany({
     select: {
       id: true,
       address: true,
@@ -27,7 +34,16 @@ export async function getAllProperty() {
         },
       },
     },
+    skip,
+    take,
+    orderBy: { updatedAt: "desc" },
   });
+
+  const count = await prisma.property.count();
+  return {
+    products,
+    count,
+  };
 }
 
 export function getFiveProperty() {
