@@ -1,13 +1,5 @@
-import type { ActionFunctionArgs } from "@remix-run/node";
-import {
-  json,
-  redirect,
-  unstable_composeUploadHandlers,
-  unstable_createMemoryUploadHandler,
-  unstable_parseMultipartFormData,
-} from "@remix-run/node";
 import { Form, useFetcher, useNavigate } from "@remix-run/react";
-import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 
 import { Button } from "~/@/components/ui/button";
 import { Input } from "~/@/components/ui/input";
@@ -20,226 +12,24 @@ import {
   SelectValue,
 } from "~/@/components/ui/select";
 import { Textarea } from "~/@/components/ui/textarea";
-import { createProperty } from "~/models/property.server";
-import uploadImageToCloudinary from "~/utils/upload-image-cloudinaty";
 
 //import { requireUserId } from "~/session.server";
 
-export const action = async ({ request }: ActionFunctionArgs) => {
-  const uploadHandler = unstable_composeUploadHandlers(
-    // our custom upload handler
-    async ({ name, contentType, data }) => {
-      if (contentType !== "image/jpeg" && contentType !== "image/png") {
-        return undefined;
-      }
-      if (name !== "images") {
-        return undefined;
-      }
-      const uploadedImage = await uploadImageToCloudinary(data);
-      return uploadedImage.secure_url;
-    },
-    // fallback to memory for everything else
-    unstable_createMemoryUploadHandler(),
-  );
-
-  const formData = await unstable_parseMultipartFormData(
-    request,
-    uploadHandler,
-  );
-  const name = formData.get("name");
-  const description = formData.get("description");
-  const address = formData.get("address");
-  const city = formData.get("city");
-  const type = formData.get("type");
-  const price = formData.get("price");
-  const area = formData.get("area");
-  const bedrooms = formData.get("bedrooms");
-  const bathrooms = formData.get("bathrooms");
-  const amenities = formData.get("amenities");
-  const status = formData.get("status");
-  const images = formData.getAll("images");
-
-  console.log({
-    name,
-    description,
-    address,
-    city,
-    type,
-    price,
-    area,
-    bedrooms,
-    bathrooms,
-    amenities,
-    status,
-    images,
-  });
-
-  if (typeof name !== "string" || name.length === 0) {
-    return json(
-      {
-        errors: {
-          description: null,
-          name: "Title is required",
-          address: null,
-          city: null,
-          type: null,
-          price: null,
-          area: null,
-          bedrooms: null,
-          bathrooms: null,
-        },
-      },
-      { status: 400 },
-    );
-  }
-
-  if (typeof description !== "string" || description.length === 0) {
-    return json(
-      {
-        errors: {
-          description: "description is required",
-          name: null,
-          address: null,
-          city: null,
-          type: null,
-          price: null,
-          area: null,
-          bedrooms: null,
-          bathrooms: null,
-        },
-      },
-      { status: 400 },
-    );
-  }
-
-  if (typeof address !== "string" || address.length === 0) {
-    return json(
-      {
-        errors: {
-          description: null,
-          name: null,
-          address: "address is required",
-          city: null,
-          type: null,
-          price: null,
-          area: null,
-          bedrooms: null,
-          bathrooms: null,
-        },
-      },
-      { status: 400 },
-    );
-  }
-
-  if (typeof city !== "string" || city.length === 0) {
-    return json(
-      {
-        errors: {
-          description: null,
-          name: null,
-          address: null,
-          city: "city is required",
-          type: null,
-          price: null,
-          area: null,
-          bedrooms: null,
-          bathrooms: null,
-        },
-      },
-      { status: 400 },
-    );
-  }
-
-  if (typeof type !== "string" || type.length === 0) {
-    return json(
-      {
-        errors: {
-          description: null,
-          name: null,
-          address: null,
-          city: null,
-          type: "type is required",
-          price: null,
-          area: null,
-          bedrooms: null,
-          bathrooms: null,
-        },
-      },
-      { status: 400 },
-    );
-  }
-
-  if (typeof price !== "string") {
-    return json(
-      {
-        errors: {
-          description: null,
-          name: null,
-          address: null,
-          city: null,
-          type: null,
-          price: "price is required",
-          area: null,
-          bedrooms: null,
-          bathrooms: null,
-        },
-      },
-      { status: 400 },
-    );
-  }
-
-  if (typeof area !== "string") {
-    return json(
-      {
-        errors: {
-          description: null,
-          name: null,
-          address: null,
-          city: null,
-          type: null,
-          price: null,
-          area: "area is required",
-          bedrooms: null,
-          bathrooms: null,
-        },
-      },
-      { status: 400 },
-    );
-  }
-
-  await createProperty({
-    name,
-    description,
-    address,
-    city,
-    type,
-    price: Number(price),
-    area: Number(area),
-    bedrooms: Number(bedrooms),
-    bathrooms: Number(bathrooms),
-    amenities: amenities?.toString() || "",
-    status: status?.toString() || "FOR_RENT",
-    images: images.map((image) => {
-      return {
-        url: image.toString(),
-      };
-    }),
-  });
-
-  return redirect(`/admin/properties`);
-};
 export default function NewNotePage() {
-  const fetcher = useFetcher();
+  const fetcher = useFetcher<any>();
   const navigate = useNavigate();
 
   const nameRef = useRef<HTMLInputElement>(null);
   const descriptionRef = useRef<HTMLTextAreaElement>(null);
   const addressRef = useRef<HTMLInputElement>(null);
   const cityRef = useRef<HTMLInputElement>(null);
-  const typeRef = useRef<HTMLSelectElement>(null);
+  const [type, setType] = useState("");
+  const [status, setStatus] = useState("");
   const priceRef = useRef<HTMLInputElement>(null);
   const areaRef = useRef<HTMLInputElement>(null);
   const bedroomsRef = useRef<HTMLInputElement>(null);
+  const bathroomsRef = useRef<HTMLInputElement>(null);
+  const amenitiesRef = useRef<HTMLInputElement>(null);
   const imagesRef = useRef<HTMLInputElement>(null);
 
   const [selectedUrls, setSelectedUrls] = useState<File[]>([]);
@@ -264,49 +54,59 @@ export default function NewNotePage() {
     return () => preview?.forEach((file) => URL.revokeObjectURL(file));
   }, [selectedUrls]);
 
-  // useEffect(() => {
-  //   if (actionData?.errors?.name) {
-  //     nameRef.current?.focus();
-  //   } else if (actionData?.errors?.description) {
-  //     descriptionRef.current?.focus();
-  //   } else if (actionData?.errors?.address) {
-  //     addressRef.current?.focus();
-  //   } else if (actionData?.errors?.city) {
-  //     cityRef.current?.focus();
-  //   }
-  // }, [actionData]);
+  useEffect(() => {
+    if (fetcher?.data?.errors?.name) {
+      nameRef.current?.focus();
+    } else if (fetcher?.data?.errors?.description) {
+      descriptionRef.current?.focus();
+    } else if (fetcher?.data?.errors?.address) {
+      addressRef.current?.focus();
+    } else if (fetcher?.data?.errors?.city) {
+      cityRef.current?.focus();
+    }
+  }, [fetcher]);
 
-  const handleFilesUpload = async (event: FormEvent<HTMLFormElement>) => {
+  const handleFilesUpload = async () => {
     const formData = new FormData();
 
     selectedUrls.forEach((file) => {
       formData.append("images", file);
     });
 
-    formData.append("name", event?.target["name"].value as string);
-    formData.append("description", event.target["description"].value);
-    formData.append("address", event.target["address"].value);
-    formData.append("city", event.target["city"].value);
-    formData.append("type", event.target["type"].value);
-    formData.append("price", event.target["price"].value);
-    formData.append("area", event.target["area"].value);
-    formData.append("bedrooms", event.target["bedrooms"].value);
-    formData.append("bathrooms", event.target["bathrooms"].value);
-    formData.append("amenities", event.target["amenities"].value);
-    formData.append("status", event.target["status"].value);
+    formData.append("name", nameRef.current?.value ?? "");
+    formData.append("description", descriptionRef.current?.value ?? "");
+    formData.append("address", addressRef.current?.value ?? "");
+    formData.append("city", cityRef.current?.value ?? "");
+    formData.append("type", type);
+    formData.append("price", priceRef.current?.value ?? "");
+    formData.append("area", areaRef.current?.value ?? "");
+    formData.append("bedrooms", bedroomsRef.current?.value ?? "");
+    formData.append("bathrooms", bathroomsRef.current?.value ?? "");
+    formData.append("amenities", amenitiesRef.current?.value ?? "");
+    formData.append("status", status);
 
     fetcher.submit(formData, {
       method: "post",
       encType: "multipart/form-data",
       action: "/admin/properties/create",
-      navigate: true,
-      unstable_viewTransition: true,
     });
   };
 
+  useEffect(() => {
+    console.log(fetcher);
+
+    if (fetcher.data?.ok) {
+      navigate("/admin/properties");
+    }
+
+    return () => {
+      // with cleanup when you unmount
+    };
+  }, [navigate, fetcher]);
+
   return (
     <Form
-      onSubmit={(e) => handleFilesUpload(e)}
+      onSubmit={handleFilesUpload}
       style={{
         display: "flex",
         flexDirection: "column",
@@ -317,47 +117,64 @@ export default function NewNotePage() {
     >
       <div className="flex w-full flex-col gap-1">
         <Label>Nombre:</Label>
-        <Input ref={nameRef} name="name" />
+        <Input
+          ref={nameRef}
+          name="name"
+          aria-invalid={fetcher?.data?.errors?.name ? true : undefined}
+          aria-errormessage={
+            fetcher?.data?.errors?.name ? "title-error" : undefined
+          }
+        />
+        {fetcher?.data?.errors?.name ? (
+          <div className="pt-1 text-red-700" id="body-error">
+            {fetcher?.data?.errors.name}
+          </div>
+        ) : null}
       </div>
 
       <div className="flex w-full flex-col gap-1">
         <Label>Descripción:</Label>
         <Textarea ref={descriptionRef} name="description" rows={3} />
 
-        {/* {actionData?.errors?.description ? (
+        {fetcher?.data?.errors?.description ? (
           <div className="pt-1 text-red-700" id="body-error">
-            {actionData.errors.description}
+            {fetcher?.data?.errors?.description}
           </div>
-        ) : null} */}
+        ) : null}
       </div>
 
       <div className="flex w-full flex-col gap-1">
         <Label>Dirección:</Label>
         <Input ref={addressRef} name="address" />
 
-        {/* {actionData?.errors?.address ? (
+        {fetcher?.data?.errors?.address ? (
           <div className="pt-1 text-red-700" id="body-error">
-            {actionData.errors.address}
+            {fetcher?.data?.errors?.address}
           </div>
-        ) : null} */}
+        ) : null}
       </div>
 
       <div className="flex w-full flex-col gap-1">
         <Label>Ciudad:</Label>
         <Input ref={cityRef} name="city" />
 
-        {/* {actionData?.errors?.city ? (
+        {fetcher?.data?.errors?.city ? (
           <div className="pt-1 text-red-700" id="body-error">
-            {actionData.errors.city}
+            {fetcher?.data?.errors?.city}
           </div>
-        ) : null} */}
+        ) : null}
       </div>
 
       <div className="flex w-full flex-col gap-1">
         <Label>Tipo:</Label>
-        <Select name="type">
+        <Select
+          onValueChange={(value: string) => {
+            setType(value);
+          }}
+          name="type"
+        >
           <SelectTrigger className="w-[280px]">
-            <SelectValue ref={typeRef} placeholder="Selecciona una tipo" />
+            <SelectValue placeholder="Selecciona una tipo" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="House">Casa</SelectItem>
@@ -366,16 +183,21 @@ export default function NewNotePage() {
           </SelectContent>
         </Select>
 
-        {/* {actionData?.errors?.type ? (
+        {fetcher?.data?.errors?.type ? (
           <div className="pt-1 text-red-700" id="body-error">
-            {actionData.errors.type}
+            {fetcher?.data?.errors?.type}
           </div>
-        ) : null} */}
+        ) : null}
       </div>
 
       <div className="flex w-full flex-col gap-1">
         <Label>Estado:</Label>
-        <Select name="status">
+        <Select
+          onValueChange={(value: string) => {
+            setStatus(value);
+          }}
+          name="status"
+        >
           <SelectTrigger className="w-[280px]">
             <SelectValue placeholder="Selecciona una tipo" />
           </SelectTrigger>
@@ -387,11 +209,11 @@ export default function NewNotePage() {
           </SelectContent>
         </Select>
 
-        {/* {actionData?.errors?.type ? (
+        {fetcher?.data?.errors?.status ? (
           <div className="pt-1 text-red-700" id="body-error">
-            {actionData.errors.type}
+            {fetcher?.data?.errors?.status}
           </div>
-        ) : null} */}
+        ) : null}
       </div>
 
       <section className="flex w-full gap-3">
@@ -399,22 +221,22 @@ export default function NewNotePage() {
           <Label>precio:</Label>
           <Input ref={priceRef} type="number" name="price" />
 
-          {/* {actionData?.errors?.price ? (
+          {fetcher?.data?.errors?.price ? (
             <div className="pt-1 text-red-700" id="body-error">
-              {actionData.errors.price}
+              {fetcher?.data?.errors?.price}
             </div>
-          ) : null} */}
+          ) : null}
         </div>
 
         <div className="flex w-full flex-col gap-1">
           <Label>area:</Label>
           <Input ref={areaRef} type="number" name="area" />
 
-          {/* {actionData?.errors?.area ? (
+          {fetcher?.data?.errors?.area ? (
             <div className="pt-1 text-red-700" id="body-error">
-              {actionData.errors.area}
+              {fetcher?.data?.errors?.area}
             </div>
-          ) : null} */}
+          ) : null}
         </div>
 
         <div className="flex w-full flex-col gap-1">
@@ -424,13 +246,13 @@ export default function NewNotePage() {
 
         <div className="flex w-full flex-col gap-1">
           <Label>Baños:</Label>
-          <Input type="number" name="bathrooms" />
+          <Input ref={bathroomsRef} type="number" name="bathrooms" />
         </div>
       </section>
 
       <div className="flex w-full flex-col gap-1">
         <Label>amenities:</Label>
-        <Input name="amenities" />
+        <Input name="amenities" ref={amenitiesRef} />
       </div>
 
       <div className="flex w-full flex-col gap-1">

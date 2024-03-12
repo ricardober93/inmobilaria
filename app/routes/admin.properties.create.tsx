@@ -12,7 +12,6 @@ import uploadImageToCloudinary from "~/utils/upload-image-cloudinaty";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const uploadHandler = unstable_composeUploadHandlers(
-    // our custom upload handler
     async ({ name, contentType, data }) => {
       if (contentType !== "image/jpeg" && contentType !== "image/png") {
         return undefined;
@@ -23,7 +22,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       const uploadedImage = await uploadImageToCloudinary(data);
       return uploadedImage.secure_url;
     },
-    // fallback to memory for everything else
     unstable_createMemoryUploadHandler(),
   );
 
@@ -211,5 +209,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     }),
   });
 
-  return redirect(`/admin/properties`);
+    return json({
+      ok: true,
+      menssage: "Property created successfully",
+    });
 };
