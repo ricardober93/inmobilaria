@@ -31,9 +31,7 @@ export const SideBar = ({ children }: { children: React.ReactNode }) => {
       </ResizablePanel>
       <ResizableHandle />
       <ResizablePanel className="w-full" defaultSize={85}>
-        <div className="flex h-full items-center justify-center p-6">
-          <span className="font-semibold">{children}</span>
-        </div>
+        <div className="flex w-full h-full p-6">{children}</div>
       </ResizablePanel>
     </ResizablePanelGroup>
   );

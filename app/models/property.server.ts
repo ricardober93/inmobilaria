@@ -1,9 +1,9 @@
-import type { Property } from "@prisma/client";
+import type { Property, Image } from "@prisma/client";
 
 import { prisma } from "~/db.server";
 
-export function getAllProperty() {
-  return prisma.property.findMany({
+export async function getAllProperty() {
+  return await prisma.property.findMany({
     select: {
       id: true,
       address: true,
@@ -20,6 +20,12 @@ export function getAllProperty() {
       status: true,
       updatedAt: true,
       createdAt: true,
+      images: {
+        select: {
+          id: true,
+          url: true,
+        },
+      },
     },
   });
 }
@@ -42,6 +48,11 @@ export function getFiveProperty() {
       status: true,
       updatedAt: true,
       createdAt: true,
+      images: {
+        select: {
+          url: true,
+        },
+      },
     },
     take: 5,
     orderBy: { updatedAt: "desc" },
@@ -55,7 +66,7 @@ export function getProperty({ propertyId }: { propertyId: Property["id"] }) {
   });
 }
 
-export function createProperty({
+export async function createProperty({
   address,
   city,
   type,
@@ -66,10 +77,25 @@ export function createProperty({
   bedrooms,
   bathrooms,
   amenities,
-  latitude,
   status,
-}: Property) {
-  return prisma.property.create({
+  images,
+}: Pick<
+  Property,
+  | "address"
+  | "city"
+  | "type"
+  | "name"
+  | "description"
+  | "price"
+  | "area"
+  | "bedrooms"
+  | "bathrooms"
+  | "amenities"
+  | "status"
+> & {
+  images: Pick<Image, "url">[];
+}) {
+  const product = await prisma.property.create({
     data: {
       address,
       city,
@@ -81,8 +107,20 @@ export function createProperty({
       bedrooms,
       bathrooms,
       amenities,
-      latitude,
       status,
+      createdAt: new Date(),
+      updatedAt: new Date(),
     },
   });
+
+  images.forEach(async (image: Pick<Image, "url">) => {
+    await prisma.image.create({
+      data: {
+        url: image.url,
+        propertyId: product.id,
+      },
+    });
+  });
+
+  return product;
 }

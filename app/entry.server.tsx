@@ -9,10 +9,15 @@ import { PassThrough } from "node:stream";
 import type { EntryContext } from "@remix-run/node";
 import { createReadableStreamFromReadable } from "@remix-run/node";
 import { RemixServer } from "@remix-run/react";
+import cloudinary from "cloudinary";
 import isbot from "isbot";
 import { renderToPipeableStream } from "react-dom/server";
 
 const ABORT_DELAY = 5_000;
+
+cloudinary.v2.config({
+  secure: true,
+});
 
 export default function handleRequest(
   request: Request,
