@@ -1,14 +1,21 @@
+import { Image, Property } from "@prisma/client";
+
 import { Button } from "./ui/button";
 import {
   Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
 } from "./ui/card";
 
-export const Recomendation = () => {
+interface IRecomendation {
+  data: Property[] & {
+    images: Image[];
+  };
+}
+export const Recomendation = ({ data }: IRecomendation) => {
   return (
     <section className="w-full p-20">
       <div className="flex  cloumn sm:row sm:justify-between mb-10">
@@ -21,23 +28,23 @@ export const Recomendation = () => {
         </div>
       </div>
 
-      <section className="flex justify-center mx-auto p-2 gap-4 flex-wrap">
-        {[0, 1, 2, 3].map((item) => (
-          <Card key={item} className="card-w hover:bg-slate-50">
+      <section className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 md:auto-rows-min auto-cols-max auto-rows-max ">
+        {data?.map((item) => (
+          <Card key={item.id} className="card-w mx-auto hover:bg-slate-50">
             <CardHeader>
               <img
                 className="rounded-md aspect-square w-72"
-                src="https://images.pexels.com/photos/186077/pexels-photo-186077.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-                alt="phot"
+                src={item?.images[0]?.url ?? "https://via.placeholder.com/150"}
+                alt={item.name!}
               />
             </CardHeader>
             <CardContent>
-              <CardTitle>Nombre de la propiedad</CardTitle>
-              <CardDescription>$50.000 - $100.000</CardDescription>
+              <CardTitle>{item.name!}</CardTitle>
+              <CardDescription>{item.price!}</CardDescription>
             </CardContent>
 
-            <CardFooter className="flex w-full">
-              <Button variant="outline" className="w-full">
+            <CardFooter className="flex justify-end w-full">
+              <Button variant="outline" className="w-fit text-right">
                 ver propiedad
               </Button>
             </CardFooter>

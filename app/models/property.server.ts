@@ -46,7 +46,7 @@ export async function getAllProperty({
   };
 }
 
-export function getFiveProperty() {
+export function getSixProperty() {
   return prisma.property.findMany({
     select: {
       id: true,
@@ -70,7 +70,7 @@ export function getFiveProperty() {
         },
       },
     },
-    take: 5,
+    take: 6,
     orderBy: { updatedAt: "desc" },
   });
 }

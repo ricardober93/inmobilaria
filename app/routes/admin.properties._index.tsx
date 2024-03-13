@@ -1,5 +1,6 @@
 import { LoaderFunctionArgs } from "@remix-run/node";
 import { Link, json, useLoaderData, useNavigate } from "@remix-run/react";
+import { TrashIcon } from "lucide-react";
 
 import { Button } from "~/@/components/ui/button";
 import {
@@ -91,6 +92,11 @@ export default function PropertyPage() {
               <TableCell>{item.area}</TableCell>
               <TableCell>{item.status}</TableCell>
               <TableCell>{item.type}</TableCell>
+              <TableCell>
+                <Button variant={"destructive"}>
+                  <TrashIcon className="w-5 h-5" />
+                </Button>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -98,14 +104,10 @@ export default function PropertyPage() {
 
       {/* pagination */}
       <div className="flex justify-center items-center gap-3">
-        <Button onClick={previousPage} className="btn btn-primary">
+        <Button onClick={previousPage} variant={"outline"}>
           Previous
         </Button>
-        <Button
-          onClick={nextPage}
-          //to={`/admin/properties?skip=${data.skip + 10}&take=${data.take + 10}`}
-          className="btn btn-primary"
-        >
+        <Button onClick={nextPage} variant={"outline"}>
           Next
         </Button>
       </div>

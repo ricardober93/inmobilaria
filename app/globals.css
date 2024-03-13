@@ -68,7 +68,7 @@
 
 
 .card-w{
-  width: min(300, max(350px, 400))
+  width: min(300, max(350px, 450))
 }
  
 @layer base {

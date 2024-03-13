@@ -1,9 +1,10 @@
-import type { MetaFunction } from "@remix-run/node";
-
+import { type MetaFunction, json } from "@remix-run/node";
+import { useLoaderData } from "@remix-run/react";
 
 import { Navbar } from "~/@/components/navbar";
 import { Recomendation } from "~/@/components/recomendation";
 import { Hero } from "~/@/components/ui/hero";
+import { getSixProperty } from "~/models/property.server";
 
 export const meta: MetaFunction = () => [
   {
@@ -22,12 +23,19 @@ export const meta: MetaFunction = () => [
   },
 ];
 
+export const loader = async () => {
+  const data = await getSixProperty();
+
+  return json({ data });
+};
+
 export default function Index() {
+  const data = useLoaderData<typeof loader>();
   return (
     <main className="relative min-h-screen">
       <Navbar />
       <Hero />
-      <Recomendation />
+      <Recomendation data={data.data} />
     </main>
   );
 }
