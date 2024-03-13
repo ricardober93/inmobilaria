@@ -2,6 +2,20 @@ import { writeAsyncIterableToWritable } from "@remix-run/node"; // `writeAsyncIt
 import type { UploadApiResponse } from "cloudinary";
 import cloudinary from "cloudinary";
 
+function deleteImageCloudinary(publicId: string) {
+  const deletePromise = new Promise((resolve, reject) => {
+    cloudinary.v2.uploader.destroy(publicId, (error, result) => {
+      if (error) {
+        reject(error);
+        return;
+      }
+      resolve(result);
+    });
+  });
+
+  return deletePromise;
+}
+
 function uploadImageToCloudinary(data: AsyncIterable<Uint8Array>) {
   const uploadPromise = new Promise<UploadApiResponse>((resolve, reject) => {
     const uploadStream = cloudinary.v2.uploader.upload_stream(
@@ -22,4 +36,5 @@ function uploadImageToCloudinary(data: AsyncIterable<Uint8Array>) {
   return uploadPromise;
 }
 
-export default uploadImageToCloudinary;
+
+export { deleteImageCloudinary, uploadImageToCloudinary };

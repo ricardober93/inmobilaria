@@ -7,7 +7,7 @@ import {
 } from "@remix-run/node";
 
 import { createProperty } from "~/models/property.server";
-import uploadImageToCloudinary from "~/utils/upload-image-cloudinaty";
+import { uploadImageToCloudinary } from "~/utils/upload-image-cloudinaty";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const uploadHandler = unstable_composeUploadHandlers(

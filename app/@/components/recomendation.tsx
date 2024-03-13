@@ -10,7 +10,7 @@ import {
   CardTitle,
 } from "./ui/card";
 
-interface IRecomendation {
+export interface IRecomendation {
   data: Property[] & {
     images: Image[];
   };
@@ -34,7 +34,10 @@ export const Recomendation = ({ data }: IRecomendation) => {
             <CardHeader>
               <img
                 className="rounded-md aspect-square w-72"
-                src={item?.images[0]?.url ?? "https://via.placeholder.com/150"}
+                src={
+                  (item as Property & { images: Image[] })?.images[0]?.url ??
+                  "https://via.placeholder.com/150"
+                }
                 alt={item.name!}
               />
             </CardHeader>

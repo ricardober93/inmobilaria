@@ -52,7 +52,7 @@ export default function NewNotePage() {
     });
 
     return () => preview?.forEach((file) => URL.revokeObjectURL(file));
-  }, [preview, selectedUrls]);
+  }, [selectedUrls]);
 
   useEffect(() => {
     if (fetcher?.data?.errors?.name) {

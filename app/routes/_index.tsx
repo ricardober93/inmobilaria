@@ -2,7 +2,7 @@ import { type MetaFunction, json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 
 import { Navbar } from "~/@/components/navbar";
-import { Recomendation } from "~/@/components/recomendation";
+import { IRecomendation, Recomendation } from "~/@/components/recomendation";
 import { Hero } from "~/@/components/ui/hero";
 import { getSixProperty } from "~/models/property.server";
 
@@ -35,7 +35,7 @@ export default function Index() {
     <main className="relative min-h-screen">
       <Navbar />
       <Hero />
-      <Recomendation data={data.data} />
+      <Recomendation data={data.data as unknown as IRecomendation["data"]} />
     </main>
   );
 }
