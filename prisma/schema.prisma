@@ -1,10 +1,11 @@
 datasource db {
   provider = "sqlite"
-  url      = env("DATABASE_URL")
+  url      = "file:./dev.db"
 }
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
 }
 
 model User {
@@ -37,36 +38,34 @@ model Note {
   userId String
 }
 
-
 // Define el modelo de la propiedad
 model Property {
-   id              Int        @id @default(autoincrement())
-  address         String
-  city            String
-  type            String      // Campo de tipo String para representar PropertyType
-  images          Image[]    @relation("PropertyImages")
-  name            String?
-  description     String?
-  price           Float?
-  area            Float?     // Área en metros cuadrados
-  bedrooms        Int?       // Número de habitaciones
-  bathrooms       Int?       // Número de baños
-  amenities       String?    // Amenidades separadas por comas
-  latitude        Float?     // Latitud geográfica
-  longitude       Float?     // Longitud geográfica
-  status          String?    // Campo de tipo String para representar PropertyStatus
+  id          Int     @id @default(autoincrement())
+  address     String
+  city        String
+  type        String // Campo de tipo String para representar PropertyType
+  images      Image[] @relation("PropertyImages")
+  name        String?
+  description String?
+  price       Float?
+  area        Float? // Área en metros cuadrados
+  bedrooms    Int? // Número de habitaciones
+  bathrooms   Int? // Número de baños
+  amenities   String? // Amenidades separadas por comas
+  latitude    Float? // Latitud geográfica
+  longitude   Float? // Longitud geográfica
+  status      String? // Campo de tipo String para representar PropertyStatus
 
-    createdAt DateTime @default(now())
+  createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  
+
   // Otros campos...
 }
 
-
 // Define el modelo de imagen
 model Image {
-  id         Int       @id @default(autoincrement())
+  id         Int      @id @default(autoincrement())
   url        String
   propertyId Int
-  property   Property  @relation("PropertyImages", fields: [propertyId], references: [id])
+  property   Property @relation("PropertyImages", fields: [propertyId], references: [id])
 }
