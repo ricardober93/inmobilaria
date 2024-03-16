@@ -76,9 +76,8 @@ export function getSixProperty() {
 }
 
 export function getProperty({ propertyId }: { propertyId: Property["id"] }) {
-  return prisma.property.findMany({
+  return prisma.property.findUniqueOrThrow({
     where: { id: propertyId },
-    orderBy: { updatedAt: "desc" },
   });
 }
 

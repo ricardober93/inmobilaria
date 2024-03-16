@@ -1,4 +1,5 @@
 import { Image, Property } from "@prisma/client";
+import { useNavigate } from "@remix-run/react";
 
 import { Button } from "./ui/button";
 import {
@@ -16,6 +17,11 @@ export interface IRecomendation {
   };
 }
 export const Recomendation = ({ data }: IRecomendation) => {
+  const navigate = useNavigate();
+
+  const goToDetail = (id: number) => {
+    navigate("/detail/" + id);
+  };
   return (
     <section className="w-full p-20">
       <div className="flex  cloumn sm:row sm:justify-between mb-10">
@@ -30,10 +36,14 @@ export const Recomendation = ({ data }: IRecomendation) => {
 
       <section className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 md:auto-rows-min auto-cols-max auto-rows-max ">
         {data?.map((item) => (
-          <Card key={item.id} className="card-w mx-auto hover:bg-slate-50">
+          <Card
+            key={item.id}
+            className="card-w mx-auto hover:bg-slate-50"
+            onClick={() => goToDetail(item.id)}
+          >
             <CardHeader>
               <img
-                className="rounded-md aspect-square w-72"
+                className="rounded-md aspect-square w-full h-72"
                 src={
                   (item as Property & { images: Image[] })?.images[0]?.url ??
                   "https://via.placeholder.com/150"
@@ -41,16 +51,14 @@ export const Recomendation = ({ data }: IRecomendation) => {
                 alt={item.name!}
               />
             </CardHeader>
-            <CardContent>
-              <CardTitle>{item.name!}</CardTitle>
-              <CardDescription>{item.price!}</CardDescription>
+            <CardContent className="grid gap-4">
+              <CardTitle className="text-ellipsis text">{item.name!}</CardTitle>
+              <CardDescription className="text-md">
+                $ {item.price!}
+              </CardDescription>
             </CardContent>
 
-            <CardFooter className="flex justify-end w-full">
-              <Button variant="outline" className="w-fit text-right">
-                ver propiedad
-              </Button>
-            </CardFooter>
+            <CardFooter className="flex justify-end w-full"></CardFooter>
           </Card>
         ))}
       </section>
