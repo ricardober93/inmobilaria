@@ -7,7 +7,6 @@ export default function AdminPage() {
   return (
     <div>
       <HeaderAdmin />
-
       <SideBar>
         <Outlet />
       </SideBar>

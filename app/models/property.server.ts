@@ -25,7 +25,7 @@ export async function getAllProperty({
       amenities: true,
       latitude: true,
       status: true,
-      updatedAt: true,
+      longitude: true,
       createdAt: true,
       images: {
         select: {
@@ -60,10 +60,11 @@ export function getSixProperty() {
       bedrooms: true,
       bathrooms: true,
       amenities: true,
-      latitude: true,
       status: true,
-      updatedAt: true,
       createdAt: true,
+      updatedAt: true,
+      longitude: true,
+      latitude: true,
       images: {
         select: {
           url: true,
@@ -75,9 +76,70 @@ export function getSixProperty() {
   });
 }
 
-export function getProperty({ propertyId }: { propertyId: Property["id"] }) {
-  return prisma.property.findUniqueOrThrow({
+export async function getProperty({
+  propertyId,
+}: {
+  propertyId: Property["id"];
+}) {
+  return await prisma.property.findUniqueOrThrow({
     where: { id: propertyId },
+  });
+}
+
+export async function searchProperty({ search }: { search: string }) {
+  return await prisma.property.findMany({
+    where: {
+      OR: [
+        {
+          address: {
+            contains: search,
+          },
+        },
+        {
+          city: {
+            contains: search,
+          },
+        },
+        {
+          type: {
+            contains: search,
+          },
+        },
+        {
+          name: {
+            contains: search,
+          },
+        },
+        {
+          description: {
+            contains: search,
+          },
+        },
+      ],
+    },
+    select: {
+      id: true,
+      address: true,
+      city: true,
+      type: true,
+      name: true,
+      description: true,
+      price: true,
+      area: true,
+      bedrooms: true,
+      bathrooms: true,
+      amenities: true,
+      latitude: true,
+      status: true,
+      createdAt: true,
+      updatedAt: true,
+      longitude: true,
+      images: {
+        select: {
+          url: true,
+        },
+      },
+    },
   });
 }
 

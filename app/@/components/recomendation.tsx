@@ -1,20 +1,11 @@
 import { Image, Property } from "@prisma/client";
 import { useNavigate } from "@remix-run/react";
 
+import { CardPropety } from "./CardProperty";
 import { Button } from "./ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "./ui/card";
 
 export interface IRecomendation {
-  data: Property[] & {
-    images: Image[];
-  };
+  data: Property[];
 }
 export const Recomendation = ({ data }: IRecomendation) => {
   const navigate = useNavigate();
@@ -36,30 +27,15 @@ export const Recomendation = ({ data }: IRecomendation) => {
 
       <section className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 md:auto-rows-min auto-cols-max auto-rows-max ">
         {data?.map((item) => (
-          <Card
+          <CardPropety
             key={item.id}
-            className="card-w mx-auto hover:bg-slate-50"
-            onClick={() => goToDetail(item.id)}
-          >
-            <CardHeader>
-              <img
-                className="rounded-md aspect-square w-full h-72"
-                src={
-                  (item as Property & { images: Image[] })?.images[0]?.url ??
-                  "https://via.placeholder.com/150"
-                }
-                alt={item.name!}
-              />
-            </CardHeader>
-            <CardContent className="grid gap-4">
-              <CardTitle className="text-ellipsis text">{item.name!}</CardTitle>
-              <CardDescription className="text-md">
-                $ {item.price!}
-              </CardDescription>
-            </CardContent>
-
-            <CardFooter className="flex justify-end w-full"></CardFooter>
-          </Card>
+            item={
+              item as {
+                images: Image[];
+              } & Property
+            }
+            onClick={goToDetail}
+          />
         ))}
       </section>
     </section>

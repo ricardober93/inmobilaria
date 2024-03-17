@@ -1,8 +1,9 @@
-import { type MetaFunction, json } from "@remix-run/node";
+import { Property } from "@prisma/client";
+import { json, type MetaFunction } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 
 import { Navbar } from "~/@/components/navbar";
-import { IRecomendation, Recomendation } from "~/@/components/recomendation";
+import { Recomendation } from "~/@/components/recomendation";
 import { Hero } from "~/@/components/ui/hero";
 import { getSixProperty } from "~/models/property.server";
 
@@ -30,12 +31,12 @@ export const loader = async () => {
 };
 
 export default function Index() {
-  const data = useLoaderData<typeof loader>();
+  const { data } = useLoaderData<typeof loader>();
   return (
     <main className="relative min-h-screen">
       <Navbar />
       <Hero />
-      <Recomendation data={data.data as unknown as IRecomendation["data"]} />
+      <Recomendation data={data as Property[]} />
     </main>
   );
 }
