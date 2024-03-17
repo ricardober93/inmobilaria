@@ -34,7 +34,7 @@ export default function SearchPage() {
   const [type, setType] = useState<string>();
 
   const handlerBack = () => {
-    navigate(-1);
+    navigate("/");
   };
 
   const handlerSearch = () => {

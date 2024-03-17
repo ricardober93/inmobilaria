@@ -1,5 +1,8 @@
 import { Image, Property } from "@prisma/client";
 
+import { formatCurrency } from "~/utils/format";
+
+import { Button } from "./ui/button";
 import {
   Card,
   CardContent,
@@ -31,11 +34,25 @@ export const CardPropety = ({ item, onClick }: ICardPropety) => {
         />
       </CardHeader>
       <CardContent className="grid gap-4">
-        <CardTitle className="text-ellipsis text">{item.name!}</CardTitle>
-        <CardDescription className="text-md">$ {item.price!}</CardDescription>
+        <CardTitle className="text-xl text-ellipsis line-clamp-1 text">
+          {item.name!}
+        </CardTitle>
+        <CardDescription className="flex flex-col gap-3">
+          <p className="text-md text-balance line-clamp-3">
+            {item.description}
+          </p>
+        </CardDescription>
       </CardContent>
 
-      <CardFooter className="flex justify-end w-full"></CardFooter>
+      <CardFooter className="flex justify-between w-full">
+        <div className="flex-flex-col-gap-2">
+          <p className="text-sm">Precio</p>
+          <p className="text-md font-semibold">
+            {formatCurrency(Number(item.price))}
+          </p>
+        </div>
+        <Button>ver Detalles</Button>
+      </CardFooter>
     </Card>
   );
 };
