@@ -81,6 +81,12 @@ export default function SearchPage() {
       </section>
 
       <section className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 md:auto-rows-min auto-cols-max auto-rows-max p-16">
+        {data.property?.length === 0 ? (
+          <div>
+            <h3 className="text-3xl">No hay resultados</h3>
+          </div>
+        ) : null}
+
         {data?.property ? (
           data.property?.map((item) => {
             return (
@@ -96,9 +102,9 @@ export default function SearchPage() {
             );
           })
         ) : (
-          <section>
-            <h1>No hay resultados</h1>
-          </section>
+          <div>
+            <h3 className="text-3xl">No hay resultados</h3>
+          </div>
         )}
       </section>
       <Footer />
