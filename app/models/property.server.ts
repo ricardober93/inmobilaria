@@ -83,6 +83,25 @@ export async function getProperty({
 }) {
   return await prisma.property.findUniqueOrThrow({
     where: { id: propertyId },
+    select: {
+      images: {
+        select: {
+          url: true,
+        },
+      },
+      id: true,
+      address: true,
+      city: true,
+      type: true,
+      name: true,
+      description: true,
+      price: true,
+      area: true,
+      amenities: true,
+      bathrooms: true,
+      status: true,
+      bedrooms: true,
+    },
   });
 }
 
