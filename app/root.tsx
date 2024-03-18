@@ -19,8 +19,6 @@ export const links: LinksFunction = () => [
   ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
 ];
 
-
-
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   return json({ user: await getUser(request) });
 };

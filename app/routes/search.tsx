@@ -4,6 +4,8 @@ import { useLoaderData, useNavigate } from "@remix-run/react";
 import { useState } from "react";
 
 import { CardPropety } from "~/@/components/CardProperty";
+import { Footer } from "~/@/components/Footer";
+import { Navbar } from "~/@/components/navbar";
 import { Button } from "~/@/components/ui/button";
 import {
   Select,
@@ -46,15 +48,16 @@ export default function SearchPage() {
   };
 
   return (
-    <main className="bg-white p-6">
-      <div className="flex gap-4">
+    <main className="bg-white">
+      <Navbar />
+      <div className="flex gap-4 px-12">
         <Button onClick={handlerBack} variant="outline">
           <Back className="text-gray-600" />
         </Button>
         <h1 className="text-3xl font-bold">Search</h1>
       </div>
 
-      <section className=" my-10 flex flex-col sm:flex-row items-center gap-2">
+      <section className=" my-10 flex flex-col sm:flex-row items-center gap-2 px-12">
         <Select
           onValueChange={(value: string) => {
             setType(value);
@@ -77,7 +80,7 @@ export default function SearchPage() {
         </Button>
       </section>
 
-      <section className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 md:auto-rows-min auto-cols-max auto-rows-max ">
+      <section className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 md:auto-rows-min auto-cols-max auto-rows-max p-16">
         {data?.property ? (
           data.property?.map((item) => {
             return (
@@ -98,6 +101,7 @@ export default function SearchPage() {
           </section>
         )}
       </section>
+      <Footer />
     </main>
   );
 }

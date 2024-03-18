@@ -2,6 +2,7 @@ import { Property } from "@prisma/client";
 import { json, type MetaFunction } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 
+import { Footer } from "~/@/components/Footer";
 import { Navbar } from "~/@/components/navbar";
 import { Recomendation } from "~/@/components/recomendation";
 import { Hero } from "~/@/components/ui/hero";
@@ -37,6 +38,7 @@ export default function Index() {
       <Navbar />
       <Hero />
       <Recomendation data={data as Property[]} />
+      <Footer />
     </main>
   );
 }

@@ -24,8 +24,8 @@ export const Hero = () => {
   };
 
   return (
-    <section className="relative min-h-screen">
-      <div className="absolute inset-0 bg-gray-500 opacity-70">
+    <section className="relative min-h-dvh">
+      <div className="absolute inset-0 bg-gray-900 opacity-80">
         <img
           className="w-full h-full object-cover bg-center bg-no-repeat"
           src="https://images.pexels.com/photos/323780/pexels-photo-323780.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"

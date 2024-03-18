@@ -1,12 +1,14 @@
+import { User } from "@prisma/client";
 import { Form } from "@remix-run/react";
 
-import { useUser } from "~/utils";
+interface Props {
+  user: User;
+}
 
-export const HeaderAdmin = () => {
-  const user = useUser();
+export const HeaderAdmin = ({ user }: Props) => {
   return (
     <header className="flex items-center justify-between bg-slate-800 p-4 text-white">
-      <p>{user.email}</p>
+      <p>{user?.email}</p>
       <Form action="/logout" method="post">
         <button
           type="submit"

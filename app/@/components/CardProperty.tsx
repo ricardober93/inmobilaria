@@ -44,7 +44,7 @@ export const CardPropety = ({ item, onClick }: ICardPropety) => {
         </CardDescription>
       </CardContent>
 
-      <CardFooter className="flex justify-between w-full">
+      <CardFooter className="flex justify-items-start  items-start sm:justify-between w-full flex-col sm:flex-row gap-5">
         <div className="flex flex-col gap-1">
           <span className="text-sm">Precio</span>
           <span className="text-md font-semibold">

@@ -15,8 +15,10 @@ export const Recomendation = ({ data }: IRecomendation) => {
   };
   return (
     <section className="w-full p-20">
-      <div className="flex  cloumn sm:row sm:justify-between mb-10">
-        <h2 className="text-2xl font-bold">Recomendaciones</h2>
+      <div className="flex flex-col md:flex-row sm:justify-between mb-10 gap-5">
+        <h2 className="text-center md:text-left text-2xl font-bold">
+          Recomendaciones
+        </h2>
 
         <div className="flex gap-3">
           <Button variant={"outline"}> Casas</Button>
