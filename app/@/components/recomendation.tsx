@@ -14,13 +14,13 @@ export const Recomendation = ({ data }: IRecomendation) => {
     navigate("/detail/" + id);
   };
   return (
-    <section className="w-full p-20">
+    <section className="w-full px-2 py-20 md:px-20">
       <div className="flex flex-col md:flex-row sm:justify-between mb-10 gap-5">
         <h2 className="text-center md:text-left text-2xl font-bold">
           Recomendaciones
         </h2>
 
-        <div className="flex gap-3">
+        <div className="flex justify-center gap-3">
           <Button variant={"outline"}> Casas</Button>
           <Button variant={"outline"}> Apartamentos </Button>
           <Button variant={"outline"}> Fincas </Button>

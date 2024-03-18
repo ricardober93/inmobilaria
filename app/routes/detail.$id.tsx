@@ -44,6 +44,8 @@ export default function Detail() {
     api.on("select", () => {
       setCurrent(api.selectedScrollSnap() + 1);
     });
+
+    return () => api.destroy();
   }, [api]);
 
   const handlerBack = () => {

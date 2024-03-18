@@ -10,7 +10,7 @@ export const Navbar = () => {
         <h2 className="font-bold text-md">Logo</h2>
       </div>
 
-      <div className="flex justify-around gap-3">
+      <div className="hidden sm:flex justify-around gap-3  ">
         <Link className={buttonVariants({ variant: "ghost" })} to="/search">
           Buscar Propiedades
         </Link>
