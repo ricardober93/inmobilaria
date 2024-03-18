@@ -38,20 +38,20 @@ export const CardPropety = ({ item, onClick }: ICardPropety) => {
           {item.name!}
         </CardTitle>
         <CardDescription className="flex flex-col gap-3">
-          <p className="text-md text-balance line-clamp-3">
+          <span className="text-md text-balance line-clamp-3">
             {item.description}
-          </p>
+          </span>
         </CardDescription>
       </CardContent>
 
       <CardFooter className="flex justify-between w-full">
-        <div className="flex-flex-col-gap-2">
-          <p className="text-sm">Precio</p>
-          <p className="text-md font-semibold">
+        <div className="flex flex-col gap-1">
+          <span className="text-sm">Precio</span>
+          <span className="text-md font-semibold">
             {formatCurrency(Number(item.price))}
-          </p>
+          </span>
         </div>
-        <Button>ver Detalles</Button>
+        <Button>ver detalles de la propiedad</Button>
       </CardFooter>
     </Card>
   );

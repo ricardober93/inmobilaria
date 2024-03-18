@@ -12,7 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/@/components/ui/select";
-import { Back } from "~/@/icons";
+import { Apartament, Back } from "~/@/icons";
 import { searchProperty } from "~/models/property.server";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
@@ -55,23 +55,23 @@ export default function SearchPage() {
       </div>
 
       <section className=" my-10 flex flex-col sm:flex-row items-center gap-2">
-        <fieldset className="w-1/2">
-          <Select
-            onValueChange={(value: string) => {
-              setType(value);
-            }}
-            name="search"
-          >
-            <SelectTrigger className="p-6">
-              <SelectValue placeholder="Que tipo Buscar" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="House">Casa</SelectItem>
-              <SelectItem value="Apartament">Apartament</SelectItem>
-              <SelectItem value="Villa">Villa</SelectItem>
-            </SelectContent>
-          </Select>
-        </fieldset>
+        <Select
+          onValueChange={(value: string) => {
+            setType(value);
+          }}
+          name="search"
+        >
+          <SelectTrigger className="p-6">
+            <Apartament className="text-gray-600" />
+            <SelectValue placeholder="Que tipo Buscar" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="House">Casa</SelectItem>
+            <SelectItem value="Apartament">Apartament</SelectItem>
+            <SelectItem value="Villa">Villa</SelectItem>
+          </SelectContent>
+        </Select>
+
         <Button className="p-6" onClick={handlerSearch}>
           Buscar
         </Button>

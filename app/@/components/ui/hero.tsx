@@ -1,6 +1,8 @@
 import { useNavigate } from "@remix-run/react";
 import { useState } from "react";
 
+import { Apartament } from "~/@/icons";
+
 import { Button } from "./button";
 import {
   Select,
@@ -39,14 +41,15 @@ export const Hero = () => {
             Todos los luagres que quieres ver, estan aqui
           </p>
 
-          <section className="flex flex-col sm:flex-row  justify-center items-center justify-items-center gap-5 p-5">
+          <section className="w-full flex flex-col sm:flex-row  justify-center items-center justify-items-center gap-5 p-5">
             <Select
               onValueChange={(value: string) => {
                 SetSearch(value);
               }}
               name="search"
             >
-              <SelectTrigger className="w-[350px] p-6">
+              <SelectTrigger className="w-1/2  py-6 px-3">
+                <Apartament className="text-gray-600" />
                 <SelectValue placeholder="Que lugar quieres Buscar" />
               </SelectTrigger>
               <SelectContent>
