@@ -1,9 +1,9 @@
 import { LoaderFunctionArgs, json } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { useLoaderData, useNavigate } from "@remix-run/react";
 import { useEffect, useState } from "react";
 
 import { Navbar } from "~/@/components/navbar";
-import { Card, CardContent } from "~/@/components/ui/card";
+import { Button } from "~/@/components/ui/button";
 import {
   Carousel,
   CarouselApi,
@@ -12,7 +12,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "~/@/components/ui/carousel";
-import { MapPinIcon } from "~/@/icons";
+import { Back, MapPinIcon } from "~/@/icons";
 import { getProperty } from "~/models/property.server";
 import { formatCurrency } from "~/utils/format";
 
@@ -27,6 +27,7 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 };
 
 export default function Detail() {
+  const navigate = useNavigate();
   const data = useLoaderData<typeof loader>();
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
@@ -45,12 +46,19 @@ export default function Detail() {
     });
   }, [api]);
 
+  const handlerBack = () => {
+    navigate("/");
+  };
+
   return (
     <main className="relative">
       <Navbar></Navbar>
 
       <section className="flex flex-col md:flex-row items-center justify-between px-8 gap-4">
         <div className="flex items-end gap-4">
+          <Button onClick={handlerBack} variant="outline">
+            <Back className="text-gray-600" />
+          </Button>
           <h2 className="text-3xl font-bold">{data.property.name}</h2>
           <div className="flex gap-2">
             <MapPinIcon className="h-5 w-5" />
