@@ -2,7 +2,7 @@ import { LoaderFunctionArgs } from "@remix-run/node";
 import { Link, json, useLoaderData, useNavigate } from "@remix-run/react";
 import { TrashIcon } from "lucide-react";
 
-import { Button } from "~/@/components/ui/button";
+import { Button, buttonVariants } from "~/@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -13,6 +13,7 @@ import {
   TableRow,
 } from "~/@/components/ui/table";
 import { getAllProperty } from "~/models/property.server";
+
 // import { requireUserId } from "~/session.server";
 
 // import { getNoteListItems } from "~/models/note.server";
@@ -46,12 +47,11 @@ export default function PropertyPage() {
 
   return (
     <div className="w-full flex h-full flex-col">
-      <p>
-        No note selected. Select a note on the left, or{" "}
-        <Link to="new" className="text-blue-500 underline">
-          create a new note.
+      <div className="mt-5 py-5 px-3 flex justify-end items-center">
+        <Link to="new" className={buttonVariants({ variant: "default" })}>
+          Crear una propiedad
         </Link>
-      </p>
+      </div>
 
       <Table>
         <TableCaption>Lista de Propiedades. Total : {data.count}</TableCaption>
@@ -83,7 +83,7 @@ export default function PropertyPage() {
                   alt={item.name!}
                 />
               </TableCell>
-              <TableCell>{item.description}</TableCell>
+              <TableCell className="line-clamp-2">{item.description}</TableCell>
               <TableCell>{item.address}</TableCell>
               <TableCell>{item.city}</TableCell>
               <TableCell className="text-right">{item.price}</TableCell>

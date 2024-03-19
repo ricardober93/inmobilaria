@@ -46,8 +46,13 @@ export async function getAllProperty({
   };
 }
 
-export function getSixProperty() {
+export function getSixProperty({ type }: { type: string }) {
   return prisma.property.findMany({
+    where: {
+      type: {
+        contains: type,
+      },
+    },
     select: {
       id: true,
       address: true,
@@ -76,12 +81,8 @@ export function getSixProperty() {
   });
 }
 
-export async function getProperty({
-  propertyId,
-}: {
-  propertyId: Property["id"];
-}) {
-  return await prisma.property.findUniqueOrThrow({
+export function getProperty({ propertyId }: { propertyId: Property["id"] }) {
+  return prisma.property.findUniqueOrThrow({
     where: { id: propertyId },
     select: {
       images: {
@@ -110,27 +111,7 @@ export async function searchProperty({ search }: { search: string }) {
     where: {
       OR: [
         {
-          address: {
-            contains: search,
-          },
-        },
-        {
-          city: {
-            contains: search,
-          },
-        },
-        {
           type: {
-            contains: search,
-          },
-        },
-        {
-          name: {
-            contains: search,
-          },
-        },
-        {
-          description: {
             contains: search,
           },
         },

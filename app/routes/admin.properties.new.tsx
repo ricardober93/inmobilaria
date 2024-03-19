@@ -1,5 +1,5 @@
 import { Form, useFetcher, useNavigate } from "@remix-run/react";
-import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useMemo, useRef, useState } from "react";
 
 import { Button } from "~/@/components/ui/button";
 import { Input } from "~/@/components/ui/input";
@@ -12,6 +12,7 @@ import {
   SelectValue,
 } from "~/@/components/ui/select";
 import { Textarea } from "~/@/components/ui/textarea";
+import { TrashIcon } from "~/@/icons";
 
 //import { requireUserId } from "~/session.server";
 
@@ -36,25 +37,34 @@ export default function NewNotePage() {
   const [preview, setPreview] = useState<string[]>([]);
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from([...selectedUrls, e.target.files![0]]);
+    console.log({ item: e.target.files![0] });
+
+    setSelectedUrls([...selectedUrls, e.target.files![0]]);
+  };
+
+  const handleFileRemove = (index: number) => {
+    console.log(index);
+
+    const files = selectedUrls.filter((_, i) => i !== index);
     setSelectedUrls(files);
   };
 
-  useEffect(() => {
+  useMemo(() => {
     if (!selectedUrls) {
       setPreview([]);
       return;
     }
 
-    selectedUrls.forEach((file) => {
-      const objectUrl = URL.createObjectURL(file);
-      setPreview([...preview, objectUrl]);
-    });
+    if (
+      selectedUrls.length >= preview.length ||
+      selectedUrls.length <= preview.length
+    ) {
+      const urls = selectedUrls.map((file) => URL.createObjectURL(file));
+      setPreview(urls);
+    }
+  }, [preview.length, selectedUrls]);
 
-    return () => preview?.forEach((file) => URL.revokeObjectURL(file));
-  }, [selectedUrls]);
-
-  useEffect(() => {
+  useMemo(() => {
     if (fetcher?.data?.errors?.name) {
       nameRef.current?.focus();
     } else if (fetcher?.data?.errors?.description) {
@@ -259,14 +269,25 @@ export default function NewNotePage() {
         <Label>Imagenes:</Label>
 
         <div className="flex gap-3">
-          {preview.map((file, index) => (
-            <img
-              className="aspect-square w-16"
-              key={index}
-              src={file}
-              srcSet={file}
-              alt={file}
-            />
+          {preview?.map((url, index) => (
+            <div key={index} className="relative">
+              <Button
+                type="button"
+                className="absolute top-[-5px] z-10 right-[-5px] p-0"
+                variant={"destructive"}
+                size={"icon"}
+                onClick={() => {
+                  handleFileRemove(index);
+                }}
+              >
+                <TrashIcon className="w-4 h-4  text-white" />
+              </Button>
+              <img
+                className="aspect-square w-28 h-28 object-cover rounded-md"
+                src={url}
+                alt={url}
+              />
+            </div>
           ))}
         </div>
 

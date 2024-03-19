@@ -4,7 +4,7 @@ import { FacebookIcon, InstagramIcon } from "../icons";
 
 export const Footer = () => {
   return (
-    <section className="w-full p-8 sm:pt-16 flex items-center justify-center bg-slate-50">
+    <section className="w-full p-4 sm:p-8 sm:pt-16 flex items-center justify-center bg-slate-50">
       <div className="md:w-2/3 w-full px-4  flex flex-col">
         <div className="w-full text-7xl font-bold">
           <h1 className="w-full md:w-2/3">

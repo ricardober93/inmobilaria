@@ -1,4 +1,4 @@
-const trashIcon = ({ className }: { className?: string }) => {
+const TrashIcon = ({ className }: { className?: string }) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -21,4 +21,4 @@ const trashIcon = ({ className }: { className?: string }) => {
   );
 };
 
-export { trashIcon };
+export { TrashIcon };

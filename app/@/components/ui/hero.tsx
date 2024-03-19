@@ -48,7 +48,7 @@ export const Hero = () => {
               }}
               name="search"
             >
-              <SelectTrigger className="w-1/2  py-6 px-3">
+              <SelectTrigger className="w-full  py-6 px-3">
                 <Apartament className="text-gray-600" />
                 <SelectValue placeholder="Que lugar quieres Buscar" />
               </SelectTrigger>

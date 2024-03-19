@@ -1,5 +1,5 @@
 import { Property } from "@prisma/client";
-import { json, type MetaFunction } from "@remix-run/node";
+import { json, LoaderFunctionArgs, type MetaFunction } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 
 import { Footer } from "~/@/components/Footer";
@@ -25,14 +25,21 @@ export const meta: MetaFunction = () => [
   },
 ];
 
-export const loader = async () => {
-  const data = await getSixProperty();
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  const url = new URL(request.url);
+
+  const type = url.searchParams.get("type") || "House";
+  console.log(type);
+
+  const data = await getSixProperty({ type });
+  console.log(data);
 
   return json({ data });
 };
 
 export default function Index() {
   const { data } = useLoaderData<typeof loader>();
+
   return (
     <main className="relative min-h-screen">
       <Navbar />
