@@ -1,5 +1,6 @@
 import { LoaderFunctionArgs, json } from "@remix-run/node";
 import { useLoaderData, useNavigate } from "@remix-run/react";
+import { BathIcon, BedSingleIcon, FenceIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { Navbar } from "~/@/components/navbar";
@@ -13,6 +14,7 @@ import {
   CarouselPrevious,
 } from "~/@/components/ui/carousel";
 import { Back, MapPinIcon } from "~/@/icons";
+import { WhatsAppIcon } from "~/@/icons/WhatsAppIcon";
 import { getProperty } from "~/models/property.server";
 import { formatCurrency } from "~/utils/format";
 
@@ -53,11 +55,11 @@ export default function Detail() {
   };
 
   return (
-    <main className="relative">
+    <main className="relative container">
       <Navbar></Navbar>
 
-      <section className="flex flex-col md:flex-row items-center justify-between px-8 gap-4">
-        <div className="flex items-end gap-4">
+      <section className="flex flex-col md:flex-row items-start md:items-center md:justify-between px-8 gap-4 mb-4">
+        <div className="flex  flex-col  md:flex-row items-start md:items-center justify-start gap-4">
           <Button onClick={handlerBack} variant="outline">
             <Back className="text-gray-600" />
           </Button>
@@ -78,26 +80,77 @@ export default function Detail() {
         </div>
       </section>
 
-      <section className="w-[90%] mx-auto p-8 mt-8">
-        <Carousel setApi={setApi} className="">
-          <CarouselContent className="w-full mx-auto">
-            {data.property.images?.map((_, index) => (
-              <CarouselItem key={index}>
-                <img
-                  src={_.url}
-                  alt={data.property.name!}
-                  className="w-full aspect-video object-cover rounded-xl"
-                />
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-          <CarouselPrevious />
-          <CarouselNext />
-        </Carousel>
-        <div className="py-2 text-center text-sm text-muted-foreground">
-          Slide {current} of {count}
-        </div>
-      </section>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3   items-center md:items-start gap-2 px-4">
+        <section className="w-[90%] mx-auto p-4 lg:col-span-2">
+          <Carousel setApi={setApi} className="">
+            <CarouselContent className="w-full mx-auto">
+              {data.property.images?.map((_, index) => (
+                <CarouselItem key={index}>
+                  <img
+                    src={_.url}
+                    alt={data.property.name!}
+                    className="w-full aspect-video object-cover rounded-xl"
+                  />
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious />
+            <CarouselNext />
+          </Carousel>
+          <div className="py-2 text-center text-sm text-muted-foreground">
+            Slide {current} of {count}
+          </div>
+        </section>
+
+        <section className="flex flex-col gap-2 p-4 border border-slate-100 rounded-lg mb-4">
+          <div className="flex flex-col gap-1 px-4">
+            <span className="text-md text-slate-400"> Descripción:</span>
+            <span className="text-md ">{data.property.description}</span>
+          </div>
+
+          <div className="flex flex-col gap-1 px-4">
+            <span className="text-md text-slate-400">Amenities:</span>
+            <span className="text-md ">{data.property.amenities}</span>
+          </div>
+
+          <article className="flex md:flex-col justify-between gap-1 p-4">
+            <div className="flex gap-2">
+              <span className="flex gap-1 items-center text-md text-slate-400">
+                <FenceIcon className="h-5 w-5" />
+                area:
+              </span>
+              <span className="text-md ">{data.property.area} m²</span>
+            </div>
+            <div className="flex gap-2">
+              <span className="flex gap-1 items-center  text-md text-slate-400">
+                <BedSingleIcon className="h-5 w-5" />
+                Cuartos:
+              </span>
+              <span className="text-md ">{data.property.bedrooms}</span>
+            </div>
+            <div className="flex gap-2">
+              <span className="flex gap-1 items-center  text-md text-slate-400">
+                <BathIcon className="h-5 w-5" />
+                Baños:
+              </span>
+              <span className="text-md ">{data.property.bathrooms}</span>
+            </div>
+          </article>
+          {/* Button WhatsApp */}
+          <Button
+            variant={"outline"}
+            onClick={() => {
+              window.open(
+                `https://wa.me/5219991045457?text=Hola, me interesa la propiedad ${data.property.name}`,
+              );
+            }}
+            className="w-full flex gap-2 items-center mx-auto md:mx-0 border-2  text-green-500 border-green-500 rounded-lg px-4"
+          >
+            <WhatsAppIcon className="h-5 w-5" />
+            Contactar
+          </Button>
+        </section>
+      </div>
     </main>
   );
 }
