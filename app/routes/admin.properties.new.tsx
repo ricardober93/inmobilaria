@@ -13,8 +13,11 @@ import {
 } from "~/@/components/ui/select";
 import { Textarea } from "~/@/components/ui/textarea";
 import { TrashIcon } from "~/@/icons";
+import { useDropzone } from "react-dropzone";
 
-//import { requireUserId } from "~/session.server";
+interface FileWithPreview extends File {
+  preview?: string;
+}
 
 export default function NewNotePage() {
   const fetcher = useFetcher<any>();
@@ -33,36 +36,28 @@ export default function NewNotePage() {
   const amenitiesRef = useRef<HTMLInputElement>(null);
   const imagesRef = useRef<HTMLInputElement>(null);
 
-  const [selectedUrls, setSelectedUrls] = useState<File[]>([]);
-  const [preview, setPreview] = useState<string[]>([]);
+  const [selectedUrls, setSelectedUrls] = useState<FileWithPreview[]>([]);
 
-  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-    console.log({ item: e.target.files![0] });
+  const { getRootProps, getInputProps } = useDropzone({
+    accept: {
+      "image/*": [],
+    },
+    onDrop: (acceptedFiles) => {
+      setSelectedUrls(
+        acceptedFiles.map((file) =>
+          Object.assign(file, {
+            preview: URL.createObjectURL(file),
+          }),
+        ),
+      );
+    },
+  });
 
-    setSelectedUrls([...selectedUrls, e.target.files![0]]);
-  };
-
-  const handleFileRemove = (index: number) => {
-    console.log(index);
-
-    const files = selectedUrls.filter((_, i) => i !== index);
-    setSelectedUrls(files);
-  };
-
-  useMemo(() => {
-    if (!selectedUrls) {
-      setPreview([]);
-      return;
-    }
-
-    if (
-      selectedUrls.length >= preview.length ||
-      selectedUrls.length <= preview.length
-    ) {
-      const urls = selectedUrls.map((file) => URL.createObjectURL(file));
-      setPreview(urls);
-    }
-  }, [preview.length, selectedUrls]);
+  useEffect(() => {
+    // Make sure to revoke the data uris to avoid memory leaks, will run on unmount
+    return () =>
+      selectedUrls.forEach((file) => URL.revokeObjectURL(file.preview!));
+  }, [selectedUrls]);
 
   useMemo(() => {
     if (fetcher?.data?.errors?.name) {
@@ -268,37 +263,29 @@ export default function NewNotePage() {
       <div className="flex w-full flex-col gap-1">
         <Label>Imagenes:</Label>
 
-        <div className="flex gap-3">
-          {preview?.map((url, index) => (
-            <div key={index} className="relative">
-              <Button
-                type="button"
-                className="absolute top-[-5px] z-10 right-[-5px] p-0"
-                variant={"destructive"}
-                size={"icon"}
-                onClick={() => {
-                  handleFileRemove(index);
-                }}
-              >
-                <TrashIcon className="w-4 h-4  text-white" />
-              </Button>
-              <img
-                className="aspect-square w-28 h-28 object-cover rounded-md"
-                src={url}
-                alt={url}
-              />
-            </div>
+        <div className="flex justify-start items-center gap-3">
+          {selectedUrls?.map((file, index) => (
+            <img
+              key={index}
+              className="aspect-square w-28 h-28 object-cover rounded-md"
+              src={file?.preview}
+              alt={file.name}
+            />
           ))}
         </div>
 
-        <Input
-          ref={imagesRef}
-          onChange={handleFileChange}
-          name="images"
-          type="file"
-          multiple
-          accept="image/*"
-        />
+        <div
+          {...getRootProps({
+            className:
+              "w-full h-16 border-4 border-dotted border-slate-200 stroke-slate-100 rounded-xl bg-slate-100 flex flex-col justify-center items-center gap-3",
+          })}
+        >
+          <Input {...getInputProps()} />
+          <p className="text-lg text-slate-300">
+            Arrastra y suelta tus imagenes aquí, o haz click para seleccionar
+            archivos
+          </p>
+        </div>
       </div>
 
       <div className="text-left">

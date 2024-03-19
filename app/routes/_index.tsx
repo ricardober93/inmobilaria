@@ -29,10 +29,10 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
 
   const type = url.searchParams.get("type") || "House";
-  console.log(type);
+
 
   const data = await getSixProperty({ type });
-  console.log(data);
+
 
   return json({ data });
 };
