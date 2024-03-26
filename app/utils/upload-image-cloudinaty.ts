@@ -4,13 +4,16 @@ import cloudinary from "cloudinary";
 
 function deleteImageCloudinary(publicId: string) {
   const deletePromise = new Promise((resolve, reject) => {
-    cloudinary.v2.uploader.destroy(publicId, (error, result) => {
-      if (error) {
-        reject(error);
-        return;
-      }
-      resolve(result);
-    });
+    cloudinary.v2.uploader.destroy(
+      "properties/" + publicId,
+      (error, result) => {
+        if (error) {
+          reject(error);
+          return;
+        }
+        resolve(result);
+      },
+    );
   });
 
   return deletePromise;

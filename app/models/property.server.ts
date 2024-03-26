@@ -2,6 +2,7 @@ import type { Property, Image } from "@prisma/client";
 
 
 import { prisma } from "~/db.server";
+import { deleteImageCloudinary } from "~/utils/upload-image-cloudinaty";
 
 export async function getAllProperty({
   skip = 0,
@@ -201,3 +202,34 @@ export async function createProperty({
 
   return product;
 }
+
+export const deleteProperty = async ({
+  propertyId,
+}: {
+  propertyId: Property["id"];
+}) => {
+  const images = await prisma.image.findMany({
+    where: {
+      propertyId,
+    },
+  });
+
+  images.forEach(async (image) => {
+    if (image && image.url) {
+      const publicId = image.url.split("/").pop()!.split(".")[0];
+
+      await deleteImageCloudinary(publicId);
+    }
+  });
+
+  await prisma.image.deleteMany({
+    where: {
+      propertyId,
+    },
+  });
+  await prisma.property.delete({
+    where: {
+      id: propertyId,
+    },
+  });
+};
