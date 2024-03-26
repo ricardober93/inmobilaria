@@ -107,8 +107,16 @@ export function getProperty({ propertyId }: { propertyId: Property["id"] }) {
   });
 }
 
-export async function searchProperty({ search }: { search: string }) {
-  return await prisma.property.findMany({
+export async function searchProperty({
+  search,
+  skip,
+  take,
+}: {
+  search: string;
+  skip: number;
+  take: number;
+}) {
+  const property = await prisma.property.findMany({
     where: {
       OR: [
         {
@@ -141,7 +149,15 @@ export async function searchProperty({ search }: { search: string }) {
         },
       },
     },
+    skip,
+    take,
   });
+
+  const count = await prisma.property.count();
+  return {
+    property,
+    count,
+  };
 }
 
 export async function createProperty({

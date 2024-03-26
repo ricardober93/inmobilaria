@@ -22,10 +22,6 @@ import {
 } from "~/@/components/ui/table";
 import { getAllProperty } from "~/models/property.server";
 
-// import { requireUserId } from "~/session.server";
-
-// import { getNoteListItems } from "~/models/note.server";
-// import { requireUserId } from "~/session.server";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
@@ -40,7 +36,10 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 };
 
 export default function PropertyPage() {
-  const fetcher = useFetcher<any>();
+  const fetcher = useFetcher<{
+    message: string;
+    ok: boolean;
+  }>();
   const navigate = useNavigate();
   const { data, skip, take } = useLoaderData<typeof loader>();
 

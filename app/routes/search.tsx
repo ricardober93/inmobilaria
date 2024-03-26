@@ -4,8 +4,6 @@ import { useLoaderData, useNavigate } from "@remix-run/react";
 import { useState } from "react";
 
 import { CardPropety } from "~/@/components/CardProperty";
-import { Footer } from "~/@/components/Footer";
-import { Navbar } from "~/@/components/navbar";
 import { Button } from "~/@/components/ui/button";
 import {
   Select,
@@ -19,19 +17,25 @@ import { searchProperty } from "~/models/property.server";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
-  const searchQuery = url.searchParams.get("search") ?? "";
+  const searchQuery = url.searchParams.get("search") ?? "House";
+  const skip = Number(url.searchParams.get("skip")) || 0;
+  const take = Number(url.searchParams.get("take")) || 10;
 
   if (searchQuery.length === 0) {
-    return json({ property: null });
+    return json({ property: null, count: 0, skip, take });
   }
 
-  const property = await searchProperty({ search: searchQuery });
-  return json({ property });
+  const { property, count } = await searchProperty({
+    search: searchQuery,
+    skip,
+    take,
+  });
+  return json({ property, count, skip, take });
 };
 
 export default function SearchPage() {
   const navigate = useNavigate();
-  const data = useLoaderData<typeof loader>();
+  const { property, count, skip, take } = useLoaderData<typeof loader>();
 
   const [type, setType] = useState<string>();
 
@@ -40,11 +44,24 @@ export default function SearchPage() {
   };
 
   const handlerSearch = () => {
-    navigate(`/search?search=${type}`);
+    navigate(`/search?search=${type}`, {
+      preventScrollReset: true,
+      unstable_viewTransition: true,
+    });
   };
 
   const goToDetail = (id: number) => {
     navigate("/detail/" + id);
+  };
+
+  const previousPage = () => {
+    if (skip === 0) return;
+    navigate(`/search?search=${type}&skip=${skip - take}&take=${take}`);
+  };
+
+  const nextPage = () => {
+    if (skip + take >= count) return;
+    navigate(`/search?search=${type}&skip=${skip + take}&take=${take}`);
   };
 
   return (
@@ -80,14 +97,14 @@ export default function SearchPage() {
       </section>
 
       <section className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 md:auto-rows-min auto-cols-max auto-rows-max p-16">
-        {data.property?.length === 0 ? (
+        {property?.length === 0 ? (
           <div>
             <h3 className="text-3xl">No hay resultados</h3>
           </div>
         ) : null}
 
-        {data?.property ? (
-          data.property?.map((item) => {
+        {property ? (
+          property?.map((item) => {
             return (
               <CardPropety
                 key={item.id}
@@ -106,6 +123,20 @@ export default function SearchPage() {
           </div>
         )}
       </section>
+
+      {/* pagination */}
+      <div className="flex justify-center items-center gap-3 py-6">
+        <Button
+          disabled={skip === 0}
+          onClick={previousPage}
+          variant={"outline"}
+        >
+          Previous
+        </Button>
+        <Button onClick={nextPage} variant={"outline"}>
+          Next
+        </Button>
+      </div>
     </main>
   );
 }
