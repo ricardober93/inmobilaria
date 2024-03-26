@@ -49,7 +49,6 @@ export default function SearchPage() {
 
   return (
     <main className="bg-white">
-      <Navbar />
       <div className="flex gap-4 px-12">
         <Button onClick={handlerBack} variant="outline">
           <Back className="text-gray-600" />
@@ -107,7 +106,6 @@ export default function SearchPage() {
           </div>
         )}
       </section>
-      <Footer />
     </main>
   );
 }

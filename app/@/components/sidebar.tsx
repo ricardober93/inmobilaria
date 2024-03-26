@@ -13,7 +13,7 @@ export const SideBar = ({ children }: { children: React.ReactNode }) => {
       direction="horizontal"
       className="min-h-screen rounded-lg"
     >
-      <ResizablePanel className="min-w-24" defaultSize={20}>
+      <ResizablePanel className="min-w-24  hidden sm:block" defaultSize={20}>
         <div className="flex h-full  py-6">
           <NavLink
             className={({ isActive }) =>

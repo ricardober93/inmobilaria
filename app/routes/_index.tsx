@@ -42,10 +42,8 @@ export default function Index() {
 
   return (
     <main className="relative min-h-screen">
-      <Navbar />
       <Hero />
       <Recomendation data={data as Property[]} />
-      <Footer />
     </main>
   );
 }

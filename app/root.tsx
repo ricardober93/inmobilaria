@@ -13,6 +13,8 @@ import {
 import { getUser } from "~/session.server";
 
 import stylesheet from "./globals.css";
+import { Navbar } from "./@/components/navbar";
+import { Footer } from "./@/components/Footer";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: stylesheet },
@@ -33,7 +35,9 @@ export default function App() {
         <Links />
       </head>
       <body className="h-full">
+        <Navbar />
         <Outlet />
+        <Footer />
         <ScrollRestoration />
         <Scripts />
         <LiveReload />

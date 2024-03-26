@@ -1,6 +1,14 @@
 import { LoaderFunctionArgs } from "@remix-run/node";
-import { Link, json, useLoaderData, useNavigate } from "@remix-run/react";
+import {
+  Form,
+  Link,
+  json,
+  useFetcher,
+  useLoaderData,
+  useNavigate,
+} from "@remix-run/react";
 import { TrashIcon } from "lucide-react";
+import { useEffect } from "react";
 
 import { Button, buttonVariants } from "~/@/components/ui/button";
 import {
@@ -32,6 +40,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 };
 
 export default function PropertyPage() {
+  const fetcher = useFetcher<any>();
   const navigate = useNavigate();
   const { data, skip, take } = useLoaderData<typeof loader>();
 
@@ -44,6 +53,23 @@ export default function PropertyPage() {
     if (skip + take >= data.count) return;
     navigate(`/admin/properties?skip=${skip + take}&take=${take}`);
   };
+  const handleDelete = async (id: number) => {
+    fetcher.submit(
+      {},
+      {
+        method: "post",
+        action: `/admin/properties/delete/${id}`,
+      },
+    );
+  };
+
+  useEffect(() => {
+    if (fetcher.data?.ok) {
+      console.log({
+        message: fetcher.data.message,
+      });
+    }
+  }, [fetcher]);
 
   return (
     <div className="w-full flex h-full flex-col">
@@ -93,9 +119,15 @@ export default function PropertyPage() {
               <TableCell>{item.status}</TableCell>
               <TableCell>{item.type}</TableCell>
               <TableCell>
-                <Button variant={"destructive"}>
-                  <TrashIcon className="w-5 h-5" />
-                </Button>
+                <Form onSubmit={() => handleDelete(item.id)}>
+                  <Button
+                    disabled={fetcher.state === "loading"}
+                    variant={"destructive"}
+                    size={"icon"}
+                  >
+                    <TrashIcon className="w-5 h-5" />
+                  </Button>
+                </Form>
               </TableCell>
             </TableRow>
           ))}
