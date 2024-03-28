@@ -8,7 +8,8 @@ import {
   useNavigate,
 } from "@remix-run/react";
 import { TrashIcon } from "lucide-react";
-import { useEffect } from "react";
+import { useMemo } from "react";
+import toast from "react-hot-toast";
 
 import { Button, buttonVariants } from "~/@/components/ui/button";
 import {
@@ -21,7 +22,6 @@ import {
   TableRow,
 } from "~/@/components/ui/table";
 import { getAllProperty } from "~/models/property.server";
-
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
@@ -62,11 +62,12 @@ export default function PropertyPage() {
     );
   };
 
-  useEffect(() => {
+  const notify = () =>
+    toast.success("Se ha e  liminado la propiedad exitosamente!");
+
+  useMemo(() => {
     if (fetcher.data?.ok) {
-      console.log({
-        message: fetcher.data.message,
-      });
+      notify();
     }
   }, [fetcher]);
 

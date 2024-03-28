@@ -3,13 +3,13 @@ import { json } from "@remix-run/node";
 
 import { deleteProperty } from "~/models/property.server";
 
-export const action = async ({ params }: ActionFunctionArgs) => {
+export const action = ({ params }: ActionFunctionArgs) => {
   const id = params.id;
 
   if (!id) {
     return json({
       message: "No hay id",
-      success: false,
+      ok: false,
     });
   }
 
@@ -19,6 +19,6 @@ export const action = async ({ params }: ActionFunctionArgs) => {
 
   return json({
     message: "Property deleted",
-    success: true,
+    ok: true,
   });
 };

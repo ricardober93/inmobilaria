@@ -1,5 +1,7 @@
 import { Form, useFetcher, useNavigate } from "@remix-run/react";
-import { ChangeEvent, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useDropzone } from "react-dropzone";
+import toast from "react-hot-toast";
 
 import { Button } from "~/@/components/ui/button";
 import { Input } from "~/@/components/ui/input";
@@ -12,8 +14,6 @@ import {
   SelectValue,
 } from "~/@/components/ui/select";
 import { Textarea } from "~/@/components/ui/textarea";
-import { TrashIcon } from "~/@/icons";
-import { useDropzone } from "react-dropzone";
 
 interface FileWithPreview extends File {
   preview?: string;
@@ -34,7 +34,6 @@ export default function NewNotePage() {
   const bedroomsRef = useRef<HTMLInputElement>(null);
   const bathroomsRef = useRef<HTMLInputElement>(null);
   const amenitiesRef = useRef<HTMLInputElement>(null);
-  const imagesRef = useRef<HTMLInputElement>(null);
 
   const [selectedUrls, setSelectedUrls] = useState<FileWithPreview[]>([]);
 
@@ -97,17 +96,14 @@ export default function NewNotePage() {
     });
   };
 
-  useEffect(() => {
-    console.log(fetcher);
+  const notify = () => toast.success("Se ha creado la propiedad exitosamente!");
 
+  useMemo(() => {
     if (fetcher.data?.ok) {
+      notify();
       navigate("/admin/properties");
     }
-
-    return () => {
-      // with cleanup when you unmount
-    };
-  }, [navigate, fetcher]);
+  }, [fetcher]);
 
   return (
     <Form
@@ -289,7 +285,14 @@ export default function NewNotePage() {
       </div>
 
       <div className="text-left">
-        <Button type="submit">Save</Button>
+        <Button
+          disabled={
+            fetcher.state === "loading" || fetcher.state === "submitting"
+          }
+          type="submit"
+        >
+          Save
+        </Button>
       </div>
     </Form>
   );

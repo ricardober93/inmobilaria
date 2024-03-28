@@ -9,12 +9,13 @@ import {
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react";
+import { Toaster } from "react-hot-toast";
 
 import { getUser } from "~/session.server";
 
-import stylesheet from "./globals.css";
-import { Navbar } from "./@/components/navbar";
 import { Footer } from "./@/components/Footer";
+import { Navbar } from "./@/components/navbar";
+import stylesheet from "./globals.css";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: stylesheet },
@@ -38,6 +39,7 @@ export default function App() {
         <Navbar />
         <Outlet />
         <Footer />
+        <Toaster position="top-center" reverseOrder={false} gutter={8} />
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
